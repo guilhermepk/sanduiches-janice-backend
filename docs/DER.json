@@ -1,0 +1,406 @@
+{
+  "tables": [
+    {
+      "id": "y-vpaS6skVYLKJO72KNWV",
+      "name": "users",
+      "x": -835.1833050084412,
+      "y": -160.07215811386618,
+      "locked": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "SERIAL",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": "QlZWY4issqz1Xd5r9yLMI",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "YXRydIJRdLC09ZFeITN3k",
+          "name": "name",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": 255
+        },
+        {
+          "id": "C5DG2pmt4WtBvwMvQU2F1",
+          "name": "email",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": 255
+        },
+        {
+          "id": "hfrRSghWN7IqBhB7hJGTF",
+          "name": "password",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": 255
+        },
+        {
+          "id": "pe8m0OjR6FFSGFqkJfsAP",
+          "name": "active",
+          "type": "BOOLEAN",
+          "default": "true",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "color": "#175e7a"
+    },
+    {
+      "id": "pE9dsWVRqwKKAruVtHQGx",
+      "name": "products",
+      "x": 611.4319686624981,
+      "y": -195.59680450734191,
+      "locked": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "SERIAL",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": "Ivj1U2PZS0JAnfYhlhPTF",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "ehVjI-OrwHN9LOXBwuNwp",
+          "name": "name",
+          "type": "VARCHAR",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": 255
+        },
+        {
+          "id": "UiP7C3mB9IL6S1Nt0_Wtj",
+          "name": "price",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "4,2"
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "color": "#175e7a"
+    },
+    {
+      "id": "BnVrSVFBXy9TyWmkBmX9P",
+      "name": "orders",
+      "x": -391.7558164915603,
+      "y": -148.07413697437633,
+      "locked": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "SERIAL",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": "yatARn507vyL9I3HmJPsA",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "tf-xMyZr8JW9F4Q5gLgJa",
+          "name": "fk_user",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "XN1jpdYA9V98FvLk4fTWd",
+          "name": "paid",
+          "type": "BOOLEAN",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "color": "#175e7a"
+    },
+    {
+      "id": "rdRbGFKR7BrfoqhSayoGP",
+      "name": "orders_products",
+      "x": 128.1764729585969,
+      "y": -145.06729763914012,
+      "locked": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "SERIAL",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": "gqEv1IIMYRs81hm0tNVCc",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "Brx1beSH3zZJ01uh0aADb",
+          "name": "fk_order",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "6CfYyAU8fwkeIiPr--5tu",
+          "name": "fk_product",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "DTPKO9cRGyriY9b7vPRTr",
+          "name": "quantity",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "zoo5oWSeJScb8G0Gq_nJq",
+          "name": "product_price",
+          "type": "DECIMAL",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "4,2"
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "color": "#175e7a"
+    },
+    {
+      "id": "x8tVZsMpenjYWYpund2Xj",
+      "name": "order_config",
+      "x": -839.5419535136779,
+      "y": 154.6135929833724,
+      "locked": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "default": "",
+          "check": "",
+          "primary": true,
+          "unique": true,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "id": "kpCyFg-VqHkK4r29Sue-z",
+          "isArray": false
+        },
+        {
+          "id": "O0QT426mPRsFYP7PD_Dco",
+          "name": "open_day",
+          "type": "WEEKDAY",
+          "default": "Quinta",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "o9AwbH_FhUV2VxgG2rthA",
+          "name": "open_time",
+          "type": "TIME",
+          "default": "12:00:00",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "xw20Q5fKJCCo_bZ4YTuhK",
+          "name": "close_day",
+          "type": "WEEKDAY",
+          "default": "Sexta",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
+          "id": "cl00rt-uuY-S5N6ZV2SZa",
+          "name": "close_time",
+          "type": "TIME",
+          "default": "00:00:00",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        }
+      ],
+      "comment": "",
+      "indices": [],
+      "color": "#175e7a"
+    }
+  ],
+  "relationships": [
+    {
+      "startTableId": "rdRbGFKR7BrfoqhSayoGP",
+      "startFieldId": "Brx1beSH3zZJ01uh0aADb",
+      "endTableId": "BnVrSVFBXy9TyWmkBmX9P",
+      "endFieldId": "yatARn507vyL9I3HmJPsA",
+      "cardinality": "many_to_one",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "order_has_many_products",
+      "id": 0
+    },
+    {
+      "startTableId": "rdRbGFKR7BrfoqhSayoGP",
+      "startFieldId": "6CfYyAU8fwkeIiPr--5tu",
+      "endTableId": "pE9dsWVRqwKKAruVtHQGx",
+      "endFieldId": "Ivj1U2PZS0JAnfYhlhPTF",
+      "cardinality": "many_to_one",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "product_is_in_many_orders",
+      "id": 1
+    },
+    {
+      "startTableId": "BnVrSVFBXy9TyWmkBmX9P",
+      "startFieldId": "tf-xMyZr8JW9F4Q5gLgJa",
+      "endTableId": "y-vpaS6skVYLKJO72KNWV",
+      "endFieldId": "QlZWY4issqz1Xd5r9yLMI",
+      "cardinality": "many_to_one",
+      "updateConstraint": "No action",
+      "deleteConstraint": "No action",
+      "name": "user_has_many_orders",
+      "id": 2
+    }
+  ],
+  "notes": [],
+  "subjectAreas": [],
+  "database": "postgresql",
+  "types": [],
+  "enums": [
+    {
+      "id": "GSk2VV7LpkPwcmhNesCYX",
+      "name": "WeekDay",
+      "values": [
+        "Domingo",
+        "Segunda",
+        "Terça",
+        "Quarta",
+        "Quinta",
+        "Sexta",
+        "Sábado"
+      ]
+    }
+  ],
+  "title": "Sanduíches da Janice"
+}
