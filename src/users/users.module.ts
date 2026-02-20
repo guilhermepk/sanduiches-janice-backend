@@ -5,6 +5,8 @@ import { UsersTypeOrmRepository } from "./users.repository";
 import { CreateUserUseCase } from "./use-cases/create/create-user.use-case";
 import { CreateUserController } from "./use-cases/create/create-user.controller";
 import { FindUserByEmailUseCase } from "./use-cases/find-by-email/find-user-by-email.use-case";
+import { FindAllUsersUseCase } from "./use-cases/find-all/find-all-users.use-case";
+import { FindAllUsersController } from "./use-cases/find-all/find-all-users.controller";
 
 @Module({
   imports: [
@@ -13,10 +15,12 @@ import { FindUserByEmailUseCase } from "./use-cases/find-by-email/find-user-by-e
   providers: [
     { provide: 'UsersRepository', useClass: UsersTypeOrmRepository },
     CreateUserUseCase,
-    FindUserByEmailUseCase
+    FindUserByEmailUseCase,
+    FindAllUsersUseCase
   ],
   controllers: [
-    CreateUserController
+    CreateUserController,
+    FindAllUsersController
   ]
 })
 export class UsersModule { }
