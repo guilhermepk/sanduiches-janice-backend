@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from "@nestjs/common";
 import { CreateUserUseCase } from "./create-user.use-case";
 import { CreateUserDto } from "src/users/models/dtos/create-user.dto";
 
@@ -8,6 +8,7 @@ export class CreateUserController {
     private readonly useCase: CreateUserUseCase
   ) { }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('create')
   async handle(
     @Body() body: CreateUserDto

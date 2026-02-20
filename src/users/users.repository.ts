@@ -12,7 +12,9 @@ export class UsersTypeOrmRepository implements IUsersRepository {
   ) { }
 
   async create(user: UserEntity): Promise<UserEntity> {
-    return await this.repository.save(user);
+    const savedUser: UserEntity = await this.repository.save(user);
+    savedUser.password = '';
+    return savedUser;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
