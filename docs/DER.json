@@ -41,7 +41,7 @@
           "default": "",
           "check": "",
           "primary": false,
-          "unique": false,
+          "unique": true,
           "notNull": true,
           "increment": false,
           "comment": "",
@@ -77,7 +77,8 @@
       ],
       "comment": "",
       "indices": [],
-      "color": "#175e7a"
+      "color": "#175e7a",
+      "hidden": false
     },
     {
       "id": "pE9dsWVRqwKKAruVtHQGx",
@@ -134,8 +135,8 @@
     {
       "id": "BnVrSVFBXy9TyWmkBmX9P",
       "name": "orders",
-      "x": -391.7558164915603,
-      "y": -148.07413697437633,
+      "x": -378.80340066194714,
+      "y": -154.16936925674239,
       "locked": false,
       "fields": [
         {

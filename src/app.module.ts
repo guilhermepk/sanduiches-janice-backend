@@ -12,7 +12,8 @@ import { TypeOrmConfigService } from './config/postgres.config';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
       inject: [TypeOrmConfigService]
-    })
+    }),
+    UsersModule
   ],
 })
 export class AppModule { }
