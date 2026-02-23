@@ -1,7 +1,9 @@
 import { Controller, Get, Query, ValidationPipe } from "@nestjs/common";
 import { FindAllUsersUseCase } from "./find-all-users.use-case";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { UseUserGuard } from "src/auth/guards/user.guard";
 
+@UseUserGuard('Admin')
 @Controller('users')
 export class FindAllUsersController {
   constructor(
