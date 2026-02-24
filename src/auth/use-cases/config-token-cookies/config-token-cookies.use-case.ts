@@ -21,8 +21,6 @@ export class ConfigTokenCookiesUseCase {
       maxAge: this.configService.get<number>('REFRESH_TOKEN_EXPIRATION_TIME') ?? 8 * 1000 * 60 * 60 * 24
     };
 
-    console.log(cookieOptions);
-
     response.cookie(
       ACCESS_TOKEN_COOKIE_KEY,
       accessToken,
