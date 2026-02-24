@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { UserRolesEnum } from "../enums/user-roles.enum";
 
 export class CreateUserDto {
   @IsNotEmpty({ message: `'name' não pode estar vazio` })
@@ -13,4 +14,8 @@ export class CreateUserDto {
   @IsNotEmpty({ message: `'password' não pode estar vazio` })
   @IsString({ message: `'password' deve ser do tipo string` })
   password: string;
+
+  @IsNotEmpty({ message: `'role' não pode estar vazio` })
+  @IsEnum(UserRolesEnum, { message: `'role' deve ser um dos seguintes: ${Object.values(UserRolesEnum).map(value => `'${value}'`).join(', ')}` })
+  role: UserRolesEnum;
 }

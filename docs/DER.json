@@ -48,6 +48,20 @@
           "size": 255
         },
         {
+          "id": "0z_qBwbXoejOhh4BQrrAd",
+          "name": "role",
+          "type": "USERROLESENUM",
+          "default": "",
+          "check": "",
+          "primary": false,
+          "unique": false,
+          "notNull": true,
+          "increment": false,
+          "comment": "",
+          "size": "",
+          "values": []
+        },
+        {
           "id": "hfrRSghWN7IqBhB7hJGTF",
           "name": "password",
           "type": "VARCHAR",
@@ -400,6 +414,14 @@
         "Quinta",
         "Sexta",
         "Sábado"
+      ]
+    },
+    {
+      "id": "uB1N03Oj8LuQXpqjxkSVs",
+      "name": "UserRolesEnum",
+      "values": [
+        "Administrador",
+        "Usuário comum"
       ]
     }
   ],

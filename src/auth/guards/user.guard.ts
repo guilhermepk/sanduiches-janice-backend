@@ -1,5 +1,6 @@
 import { applyDecorators, CanActivate, ExecutionContext, Injectable, SetMetadata, UseGuards } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { UserRolesEnum } from "src/users/models/enums/user-roles.enum";
 
 const ROLE_METADATA_KEY = 'requiredRoleName';
 
@@ -15,11 +16,13 @@ export class UserGuard implements CanActivate {
       [context.getHandler(), context.getClass()]
     );
 
+    console.log(`Precisa ser ${requiredRoleName}`);
+
     return true;
   }
 }
 
-export function UseUserGuard(roleName?: string) {
+export function UseUserGuard(roleName?: UserRolesEnum) {
   return applyDecorators(
     SetMetadata(ROLE_METADATA_KEY, roleName),
     UseGuards(UserGuard)
