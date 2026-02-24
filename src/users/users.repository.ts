@@ -19,8 +19,11 @@ export class UsersTypeOrmRepository implements IUsersRepository {
     return savedUser;
   }
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
-    return await this.repository.findOneBy({ email });
+  async findByEmail(email: string, selectPassword: boolean = false): Promise<UserEntity | null> {
+    return await this.repository.findOne({
+      where: { email },
+      select: { password: true }
+    });
   }
 
   async findAll(pagination: PaginationDto): Promise<FindAllUsersResponse> {

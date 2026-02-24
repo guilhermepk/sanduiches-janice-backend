@@ -4,6 +4,6 @@ import { FindAllUsersResponse } from "../responses/find-all-users.response";
 
 export interface IUsersRepository {
   create(user: UserEntity): Promise<UserEntity>
-  findByEmail(email: string): Promise<UserEntity | null>
+  findByEmail(email: string, selectPassword?: boolean): Promise<UserEntity | null>
   findAll(pagination: PaginationDto): Promise<FindAllUsersResponse>
 }

@@ -21,6 +21,9 @@ import { FindAllUsersController } from "./use-cases/find-all/find-all-users.cont
   controllers: [
     CreateUserController,
     FindAllUsersController
+  ],
+  exports: [
+    FindUserByEmailUseCase
   ]
 })
 export class UsersModule { }

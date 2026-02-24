@@ -9,8 +9,11 @@ export class FindUserByEmailUseCase {
     private readonly repository: IUsersRepository
   ) { }
 
-  async execute(email: string): Promise<UserEntity> {
-    const foundUser: UserEntity | null = await this.repository.findByEmail(email);
+  async execute(
+    email: string,
+    selectPassword: boolean = false
+  ): Promise<UserEntity> {
+    const foundUser: UserEntity | null = await this.repository.findByEmail(email, selectPassword);
 
     if (!foundUser) throw new NotFoundException(`Nenhum usuário com o email '${email}' encontrado`);
 
