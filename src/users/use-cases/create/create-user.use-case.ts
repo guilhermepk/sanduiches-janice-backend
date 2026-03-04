@@ -5,6 +5,7 @@ import type { IUsersRepository } from "src/users/models/interfaces/users-reposit
 import { FindUserByEmailUseCase } from "../find-by-email/find-user-by-email.use-case";
 import { ConfigService } from "@nestjs/config";
 import * as bcrypt from 'bcryptjs';
+import { tryCatch } from "src/common/utils/try-catch.util";
 
 @Injectable()
 export class CreateUserUseCase {
@@ -18,31 +19,35 @@ export class CreateUserUseCase {
   ) { }
 
   async execute(data: CreateUserDto): Promise<UserEntity> {
-    const emailAlreadyExists: boolean = await this.findUserByEmailUseCase.execute(data.email)
-      .then(() => true)
-      .catch((error) => {
-        if (error instanceof NotFoundException) return false
-        else throw error;
-      });
+    return await tryCatch(async () => {
+      const emailAlreadyExists: boolean = await this.findUserByEmailUseCase.execute(data.email)
+        .then(() => true)
+        .catch((error) => {
+          if (error instanceof NotFoundException) return false
+          else throw error;
+        });
 
-    if (emailAlreadyExists) throw new ConflictException(`Já existe um usuário cadastrado com o email ${data.email}`);
+      if (emailAlreadyExists) throw new ConflictException(`Já existe um usuário cadastrado com o email ${data.email}`);
 
-    const encryptedPassword: string = await this.encryptPassword(data.password);
+      const encryptedPassword: string = await this.encryptPassword(data.password);
 
-    const user = new UserEntity({ ...data, password: encryptedPassword });
+      const user = new UserEntity({ ...data, password: encryptedPassword });
 
-    return await this.repository.create(user);
+      return await this.repository.create(user);
+    }, `Erro ao criar usuário`);
   }
 
   private async encryptPassword(password: string): Promise<string> {
-    const envValue = this.configService.get<string>('BCRYPT_SALT_ROUNDS');
-    const SALT_ROUNDS = Number(envValue);
+    return await tryCatch(async () => {
+      const envValue = this.configService.get<string>('BCRYPT_SALT_ROUNDS');
+      const SALT_ROUNDS = Number(envValue);
 
-    if (!SALT_ROUNDS || isNaN(SALT_ROUNDS) || SALT_ROUNDS <= 0) {
-      throw new Error(`O valor '${envValue}' não é um valor válido como salt rounds. O valor deve ser um número inteiro positivo.`);
-    }
+      if (!SALT_ROUNDS || isNaN(SALT_ROUNDS) || SALT_ROUNDS <= 0) {
+        throw new Error(`O valor '${envValue}' não é um valor válido como salt rounds. O valor deve ser um número inteiro positivo.`);
+      }
 
-    const encryptedPassword: string = await bcrypt.hash(password, SALT_ROUNDS);
-    return encryptedPassword;
+      const encryptedPassword: string = await bcrypt.hash(password, SALT_ROUNDS);
+      return encryptedPassword;
+    }, `Erro ao criptografar senha do usuário`);
   }
 }

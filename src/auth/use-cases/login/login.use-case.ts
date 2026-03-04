@@ -7,6 +7,7 @@ import { ConfigTokenCookiesUseCase } from "../config-token-cookies/config-token-
 import { GenerateJwtTokensUseCase } from "../generate-jwt-tokens/generate-jwt-tokens.use-case";
 import { FindUserByEmailUseCase } from "src/users/use-cases/find-by-email/find-user-by-email.use-case";
 import * as bcrypt from 'bcryptjs';
+import { tryCatch } from "src/common/utils/try-catch.util";
 
 @Injectable()
 export class LoginUseCase {
@@ -20,35 +21,39 @@ export class LoginUseCase {
     data: LoginDto,
     response: Response
   ): Promise<Response> {
-    const { email, password, rememberMe } = data;
+    return await tryCatch(async () => {
+      const { email, password, rememberMe } = data;
 
-    const foundUser: UserEntity = await this.validateUser(email, password);
+      const foundUser: UserEntity = await this.validateUser(email, password);
 
-    const tokenPayload: JwtPayload = { id: foundUser.id, email: foundUser.email, role: '' };
+      const tokenPayload: JwtPayload = { id: foundUser.id, email: foundUser.email, role: '' };
 
-    const { accessToken, refreshToken } = this.generateJwtTokensUseCase.execute(tokenPayload, rememberMe);
+      const { accessToken, refreshToken } = await this.generateJwtTokensUseCase.execute(tokenPayload, rememberMe);
 
-    this.configTokenCookiesUseCase.execute(response, accessToken, refreshToken);
+      this.configTokenCookiesUseCase.execute(response, accessToken, refreshToken);
 
-    return response.status(HttpStatus.OK).send({ success: true });
+      return response.status(HttpStatus.OK).send({ success: true });
+    }, `Erro ao iniciar sessão`);
   }
 
   private async validateUser(
     email: string,
     password: string
   ) {
-    const errorMessage = 'Email e senha não conferem';
+    return await tryCatch(async () => {
+      const errorMessage = 'Email e senha não conferem';
 
-    const foundUser: UserEntity = await this.findUserByEmailUseCase.execute(email)
-      .catch((error) => {
-        if (error instanceof NotFoundException) throw new UnauthorizedException(errorMessage);
-        else throw error;
-      });
+      const foundUser: UserEntity = await this.findUserByEmailUseCase.execute(email)
+        .catch((error) => {
+          if (error instanceof NotFoundException) throw new UnauthorizedException(errorMessage);
+          else throw error;
+        });
 
-    const validPassword: boolean = await bcrypt.compare(password, foundUser.password);
+      const validPassword: boolean = await bcrypt.compare(password, foundUser.password);
 
-    if (!validPassword) throw new UnauthorizedException(errorMessage);
+      if (!validPassword) throw new UnauthorizedException(errorMessage);
 
-    return foundUser;
+      return foundUser;
+    }, `Erro ao validar usuário`);
   }
 }
