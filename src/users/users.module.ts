@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "./models/entities/user.entity";
 import { UsersTypeOrmRepository } from "./users.repository";
@@ -7,23 +7,28 @@ import { CreateUserController } from "./use-cases/create/create-user.controller"
 import { FindUserByEmailUseCase } from "./use-cases/find-by-email/find-user-by-email.use-case";
 import { FindAllUsersUseCase } from "./use-cases/find-all/find-all-users.use-case";
 import { FindAllUsersController } from "./use-cases/find-all/find-all-users.controller";
+import { AuthModule } from "src/auth/auth.module";
+import { FindUserByIdUseCase } from "./use-cases/find-by-id/find-user-by-id.use-case";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity])
+    TypeOrmModule.forFeature([UserEntity]),
+    forwardRef(() => AuthModule)
   ],
   providers: [
     { provide: 'UsersRepository', useClass: UsersTypeOrmRepository },
     CreateUserUseCase,
     FindUserByEmailUseCase,
-    FindAllUsersUseCase
+    FindAllUsersUseCase,
+    FindUserByIdUseCase
   ],
   controllers: [
     CreateUserController,
     FindAllUsersController
   ],
   exports: [
-    FindUserByEmailUseCase
+    FindUserByEmailUseCase,
+    FindUserByIdUseCase
   ]
 })
 export class UsersModule { }

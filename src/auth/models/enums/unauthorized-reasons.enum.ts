@@ -1,0 +1,7 @@
+export enum UnauthorizedReasonsEnum {
+  ACCESS_TOKEN_ABSENCE = 1,
+  MISSING_PRIVILLEGES = 2,
+  USER_NOT_FOUND = 3,
+  INVALID_TOKEN = 4,
+  EXPIRED_SESSION = 5,
+}

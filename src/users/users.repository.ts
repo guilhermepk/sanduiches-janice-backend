@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { FindOptionsSelect, Repository } from "typeorm";
 import { UserEntity } from "./models/entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { IUsersRepository } from "./models/interfaces/users-repository.interface";
@@ -20,10 +20,22 @@ export class UsersTypeOrmRepository implements IUsersRepository {
   }
 
   async findByEmail(email: string, selectPassword: boolean = false): Promise<UserEntity | null> {
+    const select: FindOptionsSelect<UserEntity> | undefined = selectPassword ? {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      password: true
+    } : undefined
+
     return await this.repository.findOne({
       where: { email },
-      select: { password: true }
+      select
     });
+  }
+
+  async findById(id: number): Promise<UserEntity | null> {
+    return await this.repository.findOne({ where: { id } });
   }
 
   async findAll(pagination: PaginationDto): Promise<FindAllUsersResponse> {

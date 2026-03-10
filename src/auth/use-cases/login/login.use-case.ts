@@ -2,7 +2,7 @@ import { HttpStatus, Injectable, NotFoundException, UnauthorizedException } from
 import { LoginDto } from "src/auth/models/dtos/login.dto";
 import { Response } from "express";
 import { UserEntity } from "src/users/models/entities/user.entity";
-import { JwtPayload } from "src/auth/models/types/jwt-payload.type";
+import { UserJwtPayload } from "src/auth/models/types/user-jwt-payload.type";
 import { ConfigTokenCookiesUseCase } from "../config-token-cookies/config-token-cookies.use-case";
 import { GenerateJwtTokensUseCase } from "../generate-jwt-tokens/generate-jwt-tokens.use-case";
 import { FindUserByEmailUseCase } from "src/users/use-cases/find-by-email/find-user-by-email.use-case";
@@ -26,7 +26,7 @@ export class LoginUseCase {
 
       const foundUser: UserEntity = await this.validateUser(email, password);
 
-      const tokenPayload: JwtPayload = { id: foundUser.id, email: foundUser.email, role: '' };
+      const tokenPayload: UserJwtPayload = { id: foundUser.id, email: foundUser.email, role: foundUser.role };
 
       const { accessToken, refreshToken } = await this.generateJwtTokensUseCase.execute(tokenPayload, rememberMe);
 
@@ -39,11 +39,11 @@ export class LoginUseCase {
   private async validateUser(
     email: string,
     password: string
-  ) {
+  ): Promise<UserEntity> {
     return await tryCatch(async () => {
       const errorMessage = 'Email e senha não conferem';
 
-      const foundUser: UserEntity = await this.findUserByEmailUseCase.execute(email)
+      const foundUser: UserEntity = await this.findUserByEmailUseCase.execute(email, true)
         .catch((error) => {
           if (error instanceof NotFoundException) throw new UnauthorizedException(errorMessage);
           else throw error;
@@ -53,7 +53,7 @@ export class LoginUseCase {
 
       if (!validPassword) throw new UnauthorizedException(errorMessage);
 
-      return foundUser;
+      return { ...foundUser, password: '' };
     }, `Erro ao validar usuário`);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService, JwtSignOptions } from "@nestjs/jwt";
-import { JwtPayload } from "src/auth/models/types/jwt-payload.type";
+import { UserJwtPayload } from "src/auth/models/types/user-jwt-payload.type";
 import { StringValue } from "ms";
 import { tryCatch } from "src/common/utils/try-catch.util";
 
@@ -13,7 +13,7 @@ export class GenerateJwtTokensUseCase {
   ) { }
 
   async execute(
-    payload: JwtPayload,
+    payload: UserJwtPayload,
     rememberMe?: boolean
   ): Promise<{ accessToken: string, refreshToken?: string }> {
     return await tryCatch(async () => {
@@ -27,9 +27,9 @@ export class GenerateJwtTokensUseCase {
         expiresIn: `${this.configService.get<string>('REFRESH_TOKEN_EXPIRATION_TIME') ?? 7}d` as StringValue
       }
 
-      const accessToken: string = this.jwtService.sign<JwtPayload>(payload, accessTokenConfig);
+      const accessToken: string = this.jwtService.sign<UserJwtPayload>(payload, accessTokenConfig);
       const refreshToken: string | undefined = rememberMe
-        ? this.jwtService.sign<JwtPayload>(payload, refreshTokenConfig)
+        ? this.jwtService.sign<UserJwtPayload>(payload, refreshTokenConfig)
         : undefined;
 
       return { accessToken, refreshToken };
