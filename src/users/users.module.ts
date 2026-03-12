@@ -1,4 +1,4 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { forwardRef, Module, OnModuleInit } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "./models/entities/user.entity";
 import { UsersTypeOrmRepository } from "./users.repository";
@@ -9,6 +9,7 @@ import { FindAllUsersUseCase } from "./use-cases/find-all/find-all-users.use-cas
 import { FindAllUsersController } from "./use-cases/find-all/find-all-users.controller";
 import { AuthModule } from "src/auth/auth.module";
 import { FindUserByIdUseCase } from "./use-cases/find-by-id/find-user-by-id.use-case";
+import { SeedUsersUseCase } from "./use-cases/seed/seed-users.use-case";
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { FindUserByIdUseCase } from "./use-cases/find-by-id/find-user-by-id.use-
     CreateUserUseCase,
     FindUserByEmailUseCase,
     FindAllUsersUseCase,
-    FindUserByIdUseCase
+    FindUserByIdUseCase,
+    SeedUsersUseCase
   ],
   controllers: [
     CreateUserController,
@@ -31,4 +33,12 @@ import { FindUserByIdUseCase } from "./use-cases/find-by-id/find-user-by-id.use-
     FindUserByIdUseCase
   ]
 })
-export class UsersModule { }
+export class UsersModule implements OnModuleInit {
+  constructor(
+    private readonly seedUsersUseCase: SeedUsersUseCase
+  ) { }
+
+  async onModuleInit() {
+    await this.seedUsersUseCase.execute();
+  }
+}

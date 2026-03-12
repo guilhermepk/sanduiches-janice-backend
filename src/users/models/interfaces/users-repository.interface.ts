@@ -7,4 +7,6 @@ export interface IUsersRepository {
   findByEmail(email: string, selectPassword?: boolean): Promise<UserEntity | null>
   findById(id: number): Promise<UserEntity | null>
   findAll(pagination: PaginationDto): Promise<FindAllUsersResponse>
+  count(): Promise<number>
+  seed(users: Array<UserEntity>): Promise<void>
 }

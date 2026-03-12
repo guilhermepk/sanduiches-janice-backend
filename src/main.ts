@@ -84,7 +84,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { Request, Response } from "express";
 
-const logger = new Logger('NestJS Vercel');
+const logger = new Logger('main.ts');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

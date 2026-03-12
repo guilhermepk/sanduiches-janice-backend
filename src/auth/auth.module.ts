@@ -7,6 +7,7 @@ import { LoginController } from "./use-cases/login/login.controller";
 import { JwtService } from "@nestjs/jwt";
 import { DecodeJwtTokenUseCase } from "./use-cases/decode-jwt-token/decode-jwt-token.use-case";
 import { UserGuard } from "./guards/user.guard";
+import { EncryptPasswordUseCase } from "./use-cases/encrypt-password/encrypt-password.use-case";
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { UserGuard } from "./guards/user.guard";
     GenerateJwtTokensUseCase,
     LoginUseCase,
     DecodeJwtTokenUseCase,
-    UserGuard
+    UserGuard,
+    EncryptPasswordUseCase
   ],
   controllers: [
     LoginController
@@ -28,7 +30,8 @@ import { UserGuard } from "./guards/user.guard";
     DecodeJwtTokenUseCase,
     JwtService,
     ConfigTokenCookiesUseCase,
-    GenerateJwtTokensUseCase
+    GenerateJwtTokensUseCase,
+    EncryptPasswordUseCase
   ]
 })
 export class AuthModule { }
