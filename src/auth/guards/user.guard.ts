@@ -41,8 +41,6 @@ export class UserGuard implements CanActivate {
       const request: Request = httpContext.getRequest();
       const response: Response = httpContext.getResponse();
 
-      console.log(`request.cookies`, JSON.stringify(request.cookies));
-
       const accessToken: string | undefined = request.cookies[ACCESS_TOKEN_COOKIE_KEY];
       if (!accessToken) throw new UnauthorizedException(`Credenciais inválidas (${UnauthorizedReasonsEnum.ACCESS_TOKEN_ABSENCE})`);
 
