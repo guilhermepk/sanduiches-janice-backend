@@ -20,8 +20,11 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
   /*
   Respostas possíveis
   [x] 401 UNAUTHORIZED - Não autenticado
+  [x] 401 UNAUTHORIZED - Não é admin
   [x] 200 OK - Usuários encontrados
-  [ ] 500 INTERNAL SERVER ERROR - Erro inesperado
+  [x] 200 OK - Paginação funcionando
+  [ ] 400 BAD REQUEST - Parâmetros de busca incorretos
+  [x] 500 INTERNAL SERVER ERROR - Erro inesperado
   */
 
   it('Deveria estourar Unauthorized (credenciais inválidas)', async () => {
@@ -91,6 +94,39 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
           }
         ],
         totalPages: 1
+      })
+      .then(async (res) => {
+        await truncateTables(app);
+        await closeTestingApp(app);
+        return res;
+      });
+  });
+
+  it('Deveria retornar os usuários da segunda página do banco de dados', async () => {
+    const adminUser: EnvUser = { name: 'Admin', email: 'admin@gmail.com', password: '123456', role: UserRolesEnum.ADMIN };
+    const commonUser: EnvUser = { name: 'Usuário', email: 'usuário@gmail.com', password: '123456', role: UserRolesEnum.COMMON };
+    const seedUsers: Array<EnvUser> = [adminUser, commonUser];
+
+    const app: INestApplication<App> = await createTestingApp({ seedUsers });
+
+    const cookies = await getAuthCookies(app, adminUser.email, adminUser.password);
+
+    return request(app.getHttpServer())
+      .get(endpoint)
+      .set('Cookie', cookies)
+      .query({ quantity: 1, page: 2 })
+      .expect(HttpStatus.OK)
+      .expect({
+        items: [
+          {
+            id: 2,
+            name: commonUser.name,
+            email: commonUser.email,
+            role: commonUser.role,
+            active: true
+          }
+        ],
+        totalPages: 2
       })
       .then(async (res) => {
         await truncateTables(app);
