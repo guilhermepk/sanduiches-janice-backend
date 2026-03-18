@@ -3,9 +3,10 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from 'src/app.module';
-import { ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/models/entities/user.entity';
+import { createTestingApp } from 'test/fixtures/create-testing-app.fixture';
+import { closeTestingApp } from 'test/fixtures/close-testing-app.fixture';
 
 const endpoint = '/auth/login';
 
@@ -13,23 +14,7 @@ describe(`Login (e2e) (${endpoint})`, () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule
-      ]
-    }).compile();
-
-    app = moduleRef.createNestApplication();
-
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-        forbidNonWhitelisted: true,
-      }),
-    );
-
-    await app.init();
+    app = await createTestingApp();
   });
 
   /*
@@ -132,6 +117,6 @@ describe(`Login (e2e) (${endpoint})`, () => {
   });
 
   afterAll(async (): Promise<void> => {
-    await app.close();
+    await closeTestingApp(app);
   });
 });
