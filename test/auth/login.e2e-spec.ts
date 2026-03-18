@@ -33,17 +33,24 @@ describe(`Login (e2e) (${endpoint})`, () => {
   [x] 500 INTERNAL SERVER ERROR - Erro inesperado
   */
 
-  it('Deveria realizar login com sucesso', async () => {
+  it('Deveria realizar login com sucesso, em menos de 1 segundo', async () => {
     const body = {
       "email": adminUser.email,
       "password": adminUser.password
     }
 
-    return request(app.getHttpServer())
+    const startTime = performance.now();
+
+    await request(app.getHttpServer())
       .post(endpoint)
       .send(body)
       .expect(HttpStatus.OK)
-      .expect({ "success": true });
+      .expect({ "success": true })
+
+    const endTime = performance.now();
+
+    const executionTime = endTime - startTime;
+    expect(executionTime).toBeLessThan(1 * 1000);
   });
 
   it('Deveria estourar Unauthorized (Email errado)', () => {
