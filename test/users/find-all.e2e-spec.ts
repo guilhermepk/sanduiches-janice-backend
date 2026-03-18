@@ -23,7 +23,7 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
   [x] 401 UNAUTHORIZED - Não é admin
   [x] 200 OK - Usuários encontrados
   [x] 200 OK - Paginação funcionando
-  [ ] 400 BAD REQUEST - Parâmetros de busca incorretos
+  [x] 400 BAD REQUEST - Parâmetros de busca incorretos
   [x] 500 INTERNAL SERVER ERROR - Erro inesperado
   */
 
@@ -127,6 +127,36 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
           }
         ],
         totalPages: 2
+      })
+      .then(async (res) => {
+        await truncateTables(app);
+        await closeTestingApp(app);
+        return res;
+      });
+  });
+
+  it('Deveria estourar Bad Request', async () => {
+    const adminUser: EnvUser = { name: 'Admin', email: 'admin@gmail.com', password: '123456', role: UserRolesEnum.ADMIN };
+    const seedUsers: Array<EnvUser> = [adminUser];
+
+    const app: INestApplication<App> = await createTestingApp({ seedUsers });
+
+    const cookies = await getAuthCookies(app, adminUser.email, adminUser.password);
+
+    return request(app.getHttpServer())
+      .get(endpoint)
+      .set('Cookie', cookies)
+      .query({ quantity: 'a', pageee: 2 })
+      .expect(HttpStatus.BAD_REQUEST)
+      .expect({
+        "message": [
+          "property pageee should not exist",
+          "quantity must not be greater than 50",
+          "quantity must be a positive number",
+          "quantity must be a number conforming to the specified constraints"
+        ],
+        "error": "Bad Request",
+        "statusCode": 400
       })
       .then(async (res) => {
         await truncateTables(app);
