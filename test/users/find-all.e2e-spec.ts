@@ -8,6 +8,11 @@ import { getAuthCookies } from "test/fixtures/auth-cookies.fixture";
 import { UserRolesEnum } from "src/users/models/enums/user-roles.enum";
 import { truncateTables } from "test/utils/truncate-tables.test-util";
 import { EnvUser } from "src/users/models/types/env-users.type";
+import { Test, TestingModule } from "@nestjs/testing";
+import { AppModule } from "src/app.module";
+import { UserGuard } from "src/auth/guards/user.guard";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { UserEntity } from "src/users/models/entities/user.entity";
 
 const endpoint = '/users/find-all';
 
@@ -92,6 +97,32 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
         await closeTestingApp(app);
         return res;
       });
+  });
 
+  it('Deveria estourar um Internal Server Error personalizado', async () => {
+    const testingModule: TestingModule = await Test.createTestingModule({
+      imports: [AppModule]
+    })
+      .overrideGuard(UserGuard)
+      .useValue({ canActivate: () => true })
+      .overrideProvider(getRepositoryToken(UserEntity))
+      .useValue({
+        count: () => 1,
+        findAndCount: () => { throw new Error('Erro no banco de dados') }
+      })
+      .compile();
+
+    const app: INestApplication<App> = testingModule.createNestApplication();
+
+    app.init();
+
+    return request(app.getHttpServer())
+      .get(endpoint)
+      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+      .expect({
+        message: 'Erro ao listar usuários. Erro no banco de dados',
+        error: 'Internal Server Error',
+        statusCode: 500
+      })
   });
 });
