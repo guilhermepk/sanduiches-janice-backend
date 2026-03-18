@@ -6,15 +6,22 @@ import { AppModule } from 'src/app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/models/entities/user.entity';
 import { createTestingApp } from 'test/fixtures/create-testing-app.fixture';
-import { closeTestingApp } from 'test/fixtures/close-testing-app.fixture';
+import { closeTestingApp } from 'test/utils/close-testing-app.test-util';
+import { UserRolesEnum } from 'src/users/models/enums/user-roles.enum';
+import { truncateTables } from 'test/utils/truncate-tables.test-util';
+import { EnvUser } from 'src/users/models/types/env-users.type';
 
 const endpoint = '/auth/login';
 
 describe(`Login (e2e) (${endpoint})`, () => {
+  const adminUser: EnvUser = { name: 'Admin', email: 'admin@gmail.com', password: '123456', role: UserRolesEnum.ADMIN };
+
   let app: INestApplication<App>;
 
   beforeAll(async () => {
-    app = await createTestingApp();
+    const seedUsers = [adminUser];
+
+    app = await createTestingApp({ seedUsers });
   });
 
   /*
@@ -26,10 +33,10 @@ describe(`Login (e2e) (${endpoint})`, () => {
   [x] 500 INTERNAL SERVER ERROR - Erro inesperado
   */
 
-  it('Deveria realizar login com sucesso', () => {
+  it('Deveria realizar login com sucesso', async () => {
     const body = {
-      "email": process.env.EMAIL || '',
-      "password": process.env.PASSWORD || ''
+      "email": adminUser.email,
+      "password": adminUser.password
     }
 
     return request(app.getHttpServer())
@@ -42,7 +49,7 @@ describe(`Login (e2e) (${endpoint})`, () => {
   it('Deveria estourar Unauthorized (Email errado)', () => {
     const body = {
       "email": "errado@gmail.com",
-      "password": process.env.PASSWORD || ''
+      "password": adminUser.password
     }
 
     return request(app.getHttpServer())
@@ -58,7 +65,7 @@ describe(`Login (e2e) (${endpoint})`, () => {
 
   it('Deveria estourar Unauthorized (Senha errada)', () => {
     const body = {
-      "email": process.env.EMAIL || '',
+      "email": adminUser.email,
       "password": 'aaaaaaaaa'
     }
 
@@ -91,8 +98,8 @@ describe(`Login (e2e) (${endpoint})`, () => {
       });
   });
 
-  it('Deveria estourar erro 500', async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
+  it('Deveria estourar um Internal Server Error personalizado', async () => {
+    const testingModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
     })
       .overrideProvider(getRepositoryToken(UserEntity))
@@ -102,7 +109,7 @@ describe(`Login (e2e) (${endpoint})`, () => {
       })
       .compile();
 
-    app = moduleRef.createNestApplication();
+    app = testingModule.createNestApplication();
     await app.init();
 
     return await request(app.getHttpServer())
@@ -117,6 +124,7 @@ describe(`Login (e2e) (${endpoint})`, () => {
   });
 
   afterAll(async (): Promise<void> => {
+    await truncateTables(app);
     await closeTestingApp(app);
   });
 });

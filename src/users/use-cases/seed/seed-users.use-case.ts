@@ -42,14 +42,14 @@ export class SeedUsersUseCase {
   }
 
   private async getUsersToSeed(): Promise<Array<UserEntity>> {
-    const envUsers: string = this.configService.get<string>('SEED_USERS', '');
+    const envUsers: string = this.configService.get<string>('SEED_USERS', '[]');
 
     let rawUsers: Array<EnvUser> = [];
 
     try {
       rawUsers = JSON.parse(envUsers);
     } catch (error) {
-      this.logger.error(`Não foi possível converter os usuários da env de string para JSON. Erro: ${error}`);
+      this.logger.error(`Não foi possível converter os usuários da env de string para JSON. Usuários: ${envUsers}. Erro: ${error}`);
     }
 
     const users: Array<UserEntity> = await this.parseUsers(rawUsers);
