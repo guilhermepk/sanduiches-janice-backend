@@ -19,7 +19,7 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
   [ ] 500 INTERNAL SERVER ERROR - Erro inesperado
   */
 
-  it('Deveria estourar Unauthorized', async () => {
+  it('Deveria estourar Unauthorized (credenciais inválidas)', async () => {
     const app: INestApplication<App> = await createTestingApp();
 
     return request(app.getHttpServer())
@@ -27,6 +27,31 @@ describe(`Find all users (e2e) (${endpoint})`, () => {
       .expect(HttpStatus.UNAUTHORIZED)
       .expect({
         message: `Credenciais inválidas (${UnauthorizedReasonsEnum.ACCESS_TOKEN_ABSENCE})`,
+        error: 'Unauthorized',
+        statusCode: 401
+      })
+      .then(async (res) => {
+        await truncateTables(app);
+        await closeTestingApp(app);
+
+        return res;
+      });
+  });
+
+  it('Deveria estourar Unauthorized (Cargo incompatível)', async () => {
+    const user: EnvUser = { name: 'Usuário', email: 'user@gmail.com', password: '123456', role: UserRolesEnum.COMMON };
+    const seedUsers = [user];
+
+    const app: INestApplication<App> = await createTestingApp({ seedUsers });
+
+    const cookies = await getAuthCookies(app, user.email, user.password);
+
+    return request(app.getHttpServer())
+      .get(endpoint)
+      .set('Cookie', cookies)
+      .expect(HttpStatus.UNAUTHORIZED)
+      .expect({
+        message: 'Cargo incompatível. Você não tem autorização para executar essa ação. (2)',
         error: 'Unauthorized',
         statusCode: 401
       })
